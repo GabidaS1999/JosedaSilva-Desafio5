@@ -1,0 +1,11 @@
+[
+  {
+    "id": 67,
+    "title": "pruebaa5",
+    "description": "Sonido fuerte",
+    "price": 15000,
+    "thumbnails": "imgEstereo",
+    "code": "abc456",
+    "stock": 100
+  }
+]
