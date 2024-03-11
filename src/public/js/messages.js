@@ -7,12 +7,23 @@ const chatBox = document.getElementById('textoEntrada')
 
 Swal.fire({
     icon: "info",
-    title: "Intorudci tu nombre",
-    input: 'text',
+    title: "Introduci tu email",
+    input: 'email',
+    inputAttributes: {
+      autocapitalize: 'off',
+      autocorrect: 'off'
+    },
+    preConfirm: (email) => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+          Swal.showValidationMessage('Por favor, ingrese un correo electrónico válido');
+        }
+        return email;
+      },
     color: "black",
     inputValidator: (value) => {
         if (!value) {
-            return "Debes ingresar un nombre para continuar"
+            return "Debes ingresar un email para continuar"
         } else {
 
             socket.emit('userConnected',  {user: value} )
@@ -22,8 +33,8 @@ Swal.fire({
 }).then(result => {
     user = result.value
 
-    const myName = document.getElementById('myName')
-    myName.innerHTML = user
+    const myEmail = document.getElementById('myEmail')
+    myEmail.innerHTML = user
 })
 
 

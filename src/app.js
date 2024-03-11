@@ -3,9 +3,8 @@ import { Server } from 'socket.io';
 import mongoose from 'mongoose';
 import exphbs from 'express-handlebars';
 import __dirname from './utils.js';
-import allowPrototypeAccess from '@handlebars/allow-prototype-access';
 import Handlebars from 'handlebars';
-
+import MessagesService from "./dao/Db/messagesService.js";
 import productsRoutes from './routes/products.routes.js';
 import cartRoutes from './routes/cart.routes.js';
 import viewsRoutes from './routes/views.router.js';
@@ -13,8 +12,10 @@ import ProductsService from "./dao/Db/products.service.js";
 import ProductManager from './dao/ManagerFS/Product-Manager.js';
 
 
+
 let productService = new ProductsService();
 let productManager = new ProductManager();
+let messageService = new MessagesService();
 const app = express();
 const PORT = process.env.PORT || 8080;
 
@@ -59,10 +60,6 @@ app.use('/', viewsRoutes)
 
 
 
-
-
-
-
 const URL_MONGO = 'mongodb+srv://josedasilva1999:Olivia2024@cluster0.elp8ja0.mongodb.net/ecommerce?retryWrites=true&w=majority&appName=Cluster0';
 const connectMongo = async () => {
     try {
@@ -75,6 +72,12 @@ const connectMongo = async () => {
 }
 connectMongo();
 
+
+
+
+
+
+
 const httpServer = app.listen(PORT, () => {
     console.log(`Server run on port: ${PORT}`);
 });
@@ -84,11 +87,12 @@ const productos = await productService.getAll();
 socketServer.on('connection', socket => {
     console.log("Nuevo cliente conectado");
 
-
-    socket.on('products', () => {
-       const products = productos
-        socket.emit('products', products);
+    
+    socket.on('products', async () => {
+        const products = await productService.getAll();
+        socketServer.emit('products', products);
     });
+    
 
     socket.on("newProduct", async (product) => {
         await productService.save(product);
@@ -96,14 +100,16 @@ socketServer.on('connection', socket => {
         const products = await productService.getAll() ;
         socketServer.emit("products", products);
     });
+    socketServer.emit('products', productos)
     
     
    socketServer.emit('messageLogs', messages)
     socket.on('message', data=>{
         messages.push(data)
         socketServer.emit('messageLogs', messages);
+        messageService.save(data)
     })
-
+    
     socket.on('userConnected', data=>{
         socketServer.emit('userConnected', data)
     })

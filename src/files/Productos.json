@@ -7,5 +7,41 @@
     "thumbnails": "imgEstereo",
     "code": "abc456",
     "stock": 100
+  },
+  {
+    "id": 81,
+    "title": "Computadora",
+    "description": "Muy linda",
+    "price": 5000,
+    "thumbnails": "./computadora/lenovo",
+    "code": "abc299",
+    "stock": 100
+  },
+  {
+    "id": 43,
+    "title": "Computadora HP",
+    "description": "Muy linda",
+    "price": 5000,
+    "thumbnails": "./computadora/hp",
+    "code": "abc299",
+    "stock": 100
+  },
+  {
+    "id": 97,
+    "title": "Computadora HP",
+    "description": "Muy linda",
+    "price": 5000,
+    "thumbnails": "./computadora/hp",
+    "code": "abc289",
+    "stock": 100
+  },
+  {
+    "id": 99,
+    "title": "Computadora Nueva",
+    "description": "Muy linda",
+    "price": 5000,
+    "thumbnails": "./computadora/IntelCore",
+    "code": "abc349",
+    "stock": 100
   }
 ]

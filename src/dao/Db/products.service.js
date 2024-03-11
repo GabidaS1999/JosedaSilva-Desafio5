@@ -5,11 +5,8 @@ export default class ProductsService {
  
     getAll = async () => {
         try {
-            console.log("Intentando obtener todos los productos...");
     
             let products = await productModel.find();
-    
-            console.log("Productos obtenidos con éxito:", products);
     
             return products;
         } catch (error) {
@@ -47,15 +44,14 @@ export default class ProductsService {
     }
     updateProduct = async (id, update) => {
         try {
-            // Buscar el producto por su identificador (_id)
+
             let productToUpdate = await productModel.findById(id);
     
-            // Verificar si el producto existe
+
             if (!productToUpdate) {
                 return { status: 'error', msg: 'Producto no encontrado' };
             }
-    
-            // Aplicar las actualizaciones al producto
+
             let updatedProduct = await productModel.updateOne({ _id: id }, update);
             return updatedProduct;
         } catch (error) {
