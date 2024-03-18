@@ -82,6 +82,28 @@ router.put('/:cid/products/:pid', async (req, res)=>{
     const result = await cartService.updateProductQuantityInCart(cid, pid, newQuantity);
     result.success ? res.status(200).json(result.cart) : res.status(400).json(result) 
 })
+router.put('/:cid', async (req, res) => {
+    try {
+        const cid = req.params.cid;
+        const newProductsArray = req.body.products; 
+        if (!Array.isArray(newProductsArray)) {
+            return res.status(400).json({ success: false, message: "El cuerpo de la solicitud debe contener un array de productos." });
+        }
+
+
+
+        const result = await cartService.update(cid, newProductsArray);
+        if (result.success) {
+            return res.status(200).json(result.cart);
+        } else {
+            return res.status(400).json(result);
+        }
+    } catch (error) {
+       
+        console.error("Error al procesar la solicitud:", error);
+        return res.status(500).json({ success: false, message: "Ocurrió un error al procesar la solicitud." });
+    }
+});
 
 
 export default router;

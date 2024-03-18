@@ -139,7 +139,28 @@ export default class CartService {
             return { success: false, error: error.message };
         }
     }
+
+update = async (cid, newProductsArray) => {
+    try {
+        
+        let existingCart = await cartsModel.findById(cid);
+        if (!existingCart) {
+            return { success: false, message: "El carrito no fue encontrado." };
+        }
+
     
+        existingCart.products = newProductsArray;
+
+     
+        let updatedCart = await existingCart.save();
+
+        return { success: true, cart: updatedCart };
+    } catch (error) {
+        console.error('Error al actualizar el carrito:', error);
+        throw error; 
+    }
+};
+
     
 
 }
