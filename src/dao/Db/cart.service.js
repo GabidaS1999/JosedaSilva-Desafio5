@@ -1,4 +1,5 @@
 import { cartsModel } from "../models/carts.models.js";
+import { productModel } from "../models/products.models.js";
 
 export default class CartService {
     getAll = async () => {
@@ -16,24 +17,37 @@ export default class CartService {
     }
     addProductToCart = async (cartId, productId) => {
         try {
-           
+        
             let cart = await cartsModel.findById(cartId);
     
             if (!cart) {
                 throw new Error("Carrito no encontrado");
             }
     
-
-            const existingProduct = cart.products.find(product => product._id.toString() === productId.toString());
+ 
+            const product = await productModel.findById(productId);
     
-            if (existingProduct) {
-                existingProduct.quantity += 1;
+            if (!product) {
+                throw new Error("Producto no encontrado");
+            }
+    
+            const existingProductIndex = cart.products.findIndex(product => product._id.toString() === productId.toString());
+    
+            if (existingProductIndex !== -1) {
+      
+                cart.products[existingProductIndex].quantity += 1;
             } else {
+
                 cart.products.push({
                     _id: productId,
-                    quantity: 1,
+                    title: product.title,
+                    description: product.description,
+                    price: product.price,
+                    quantity: 1
                 });
             }
+    
+            // Guardar el carrito actualizado
             await cart.save();
     
             return { success: true, cart };
@@ -43,6 +57,88 @@ export default class CartService {
         }
     }
     
+    deleteProductFromCart = async (cartId, productId) => {
+        try {
+       
+            let cart = await cartsModel.findById(cartId);
+    
+            if (!cart) {
+                throw new Error("Carrito no encontrado");
+            }
+    
+         
+            const productIndex = cart.products.findIndex(product => product._id.toString() === productId.toString());
+    
+      
+            if (productIndex === -1) {
+                throw new Error("Producto no encontrado en el carrito");
+            }
+    
+           
+            cart.products.splice(productIndex, 1);
+    
+          
+            await cart.save();
+    
+            return { success: true, message: "Producto eliminado del carrito", cart };
+        } catch (error) {
+            console.error("Error al eliminar producto del carrito:", error);
+            return { success: false, error: error.message };
+        }
+    }
+
+    deleteAllProductsFromCart = async (cartId) => {
+        try {
+            
+            let cart = await cartsModel.findById(cartId);
+    
+            if (!cart) {
+                throw new Error("Carrito no encontrado");
+            }
+    
+           
+            cart.products = [];
+    
+          
+            await cart.save();
+    
+            return { success: true, message: "Todos los productos eliminados del carrito", cart };
+        } catch (error) {
+            console.error("Error al eliminar todos los productos del carrito:", error);
+            return { success: false, error: error.message };
+        }
+    }
+
+
+    updateProductQuantityInCart = async (cartId, productId, newQuantity) => {
+        try {
+            // Encuentra el carrito por su ID
+            let cart = await cartsModel.findById(cartId);
+    
+            if (!cart) {
+                throw new Error("Carrito no encontrado");
+            }
+    
+         
+            const product = cart.products.find(product => product._id.toString() === productId.toString());
+    
+  
+            if (!product) {
+                throw new Error("Producto no encontrado en el carrito");
+            }
+    
+
+            product.quantity = newQuantity;
+    
+         
+            await cart.save();
+    
+            return { success: true, message: "Cantidad del producto actualizada", cart };
+        } catch (error) {
+            console.error("Error al actualizar la cantidad del producto en el carrito:", error);
+            return { success: false, error: error.message };
+        }
+    }
     
     
 

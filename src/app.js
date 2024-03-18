@@ -10,7 +10,7 @@ import cartRoutes from './routes/cart.routes.js';
 import viewsRoutes from './routes/views.router.js';
 import ProductsService from "./dao/Db/products.service.js";
 import ProductManager from './dao/ManagerFS/Product-Manager.js';
-
+import { productModel } from "./dao/models/products.models.js";
 
 
 let productService = new ProductsService();
@@ -65,6 +65,8 @@ const connectMongo = async () => {
     try {
         mongoose.connect(URL_MONGO)
         console.log("Conectado con exito a MongoDB");
+        
+
     } catch (error) {
         console.error("No se pudo conectar la BD con Moongose" + error);
         process.exit()

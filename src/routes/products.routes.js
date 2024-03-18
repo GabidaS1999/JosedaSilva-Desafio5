@@ -52,7 +52,7 @@ router.post('/', async (req, res) => {
             return res.status(400).send({ status: 'error', msg: 'Valores incompletos, revisar datos' });
         }
         await productManager.addProduct(product.title, product.description, product.price, product.thumbnails, product.code, product.stock)
-        await productService.save({title: product.title,description: product.description, price: product.price, thumbnails: product.thumbnails, code: product.code, stock: product.stock});
+        await productService.save({title: product.title,description: product.description, price: product.price, category: product.category, thumbnails: product.thumbnails, code: product.code, stock: product.stock});
         socket.emit('newProduct', product);
         res.send({ status: 'success', msg: `Producto creado` });
 
